@@ -3,14 +3,11 @@
 #SBATCH -c 1
 #SBATCH -N 1
 #SBATCH --mem=61440M
-#SBATCH -J test
+#SBATCH -J varscan
 #SBATCH -p himem
 
 
-
-
 set -eux
-
 module load java/8 bwa/0.7.15 samtools/1.9
 module load varscan/2.4.2 snpEff/4.3
 module load tabix/0.2.6
@@ -73,7 +70,7 @@ module load varscan/2.4.2
 
 			samtools mpileup -B --ignore-RG -l $agilent -f $human_ref_genome ${sample[1]} ${sample[2]} \
 			| java -jar $varscan_dir/VarScan.jar mpileup2snp - \
-			--min-var-freq 0.000001 \
+			--min-var-freq 0.0000001 \
 			--p-value 0.5 \
 			--output-vcf 1 \
 					> ${output[1]}.comparison.vcf
@@ -94,6 +91,8 @@ ${output[1]}.comparison.vcf \
 		 -stats ${output[2]}.comparison.html \
 		 $snpeff_genome \
 		 > ${output[2]}.comparison.vcf
+
+sleep 100
 
 
 grep -v "^#" ${output[2]}.comparison.vcf | grep -v "rs" | grep -iv "^[a-z]"|  awk 'match($3, /\./) {print $0}' | sed -e 's/WT.*ANN=.|//g' -e 's/|ENS.*ADR\t/\t/g' | cut -f 1-2,4-5,8-10 | sed -e 's/;/\t/g' -e 's/|/\t/g' -e's/:/\t/g' -e 's/\tADP=/\t/g' -e 's/%//g' | cut -f 1-8,12-16,26-30 | awk 'NF>17' | grep -v "=" | egrep -iv "^\.|muc|usp|rp11" > ${output[2]}.var.txt

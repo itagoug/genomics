@@ -1,16 +1,14 @@
 #!/bin/bash
-#SBATCH -t 03:00:00
-#SBATCH -c 1
-#SBATCH -N 1
-#SBATCH --mem=61440M
-#SBATCH -J test
-#SBATCH -p himem
-
-
+#PBS -l nodes=1:ppn=16,walltime=48:00:00,vmem=30g,mem=220g
+#PBS -N calling
+#PBS -q all
+#PBS -V
+#PBS -j oe
+#PBS -m abe
+#PBS -M inestagoug@gmail.com
 
 
 set -eux
-
 module load java/8 bwa/0.7.15 samtools/1.9
 module load varscan/2.4.2 snpEff/4.3
 module load tabix/0.2.6
@@ -22,9 +20,9 @@ raw=$scratch/sickkids1/bam_clean/dup_clean
 
 
 ## __DO NOT CHANGE__
-#pbs=$(echo $PBS_JOBID | cut -f1 -d '.')
+pbs=$(echo $PBS_JOBID | cut -f1 -d '.')
 
-pbs=$SLURM_JOB_ID
+#pbs=$SLURM_JOB_ID
 
 bamfiles=$scratch/sickkids1/bamfiles
 home=/cluster/home/itagoug
@@ -73,7 +71,7 @@ module load varscan/2.4.2
 
 			samtools mpileup -B --ignore-RG -l $agilent -f $human_ref_genome ${sample[1]} ${sample[2]} \
 			| java -jar $varscan_dir/VarScan.jar mpileup2snp - \
-			--min-var-freq 0.000001 \
+			--min-var-freq 0.0000001 \
 			--p-value 0.5 \
 			--output-vcf 1 \
 					> ${output[1]}.comparison.vcf

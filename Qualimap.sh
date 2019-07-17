@@ -22,25 +22,15 @@ label=12_D02
 sample=$raw/$label*bam
 
 
-#for i in {9 11 }; do
-#label=$i
-
-
-
-#label=$raw/9_A02
-
-
 ## __DO NOT CHANGE__
 pbs=$(echo $PBS_JOBID | cut -f1 -d '.')
 bamfiles=$scratch/sickkids1/bamfiles
 home=/cluster/home/itagoug
 user_databases=$scratch/databases
 workdir=$scratch/sickkids1/analysis/$pbs
-#GRCh37-lite.fa link http://www.bcgsc.ca/downloads/genomes/9606/hg19/1000genomes/bwa_ind/genome/
 human_ref_genome=$scratch/human/lite/GRCh37-lite.fa
 bam_clean=$scratch/sickkids1/bam_clean
 mills=$scratch/human/gold/Mills.gold.standard.adapted_noChr.vcf
-#agilent=$scratch/human/agilent_original/padded.clean.bed
 agilent_corrected=$scratch/human/agilent_original/padded.clean_qualimap.bed
 snpeff_config=$home/scripts/snpEff.config
 
@@ -51,17 +41,9 @@ threads=25
 snpeff_genome=GRCh37.75
 
 
-
-#################################
-## calling copy number variants##
-#################################
-
-#find any data with final.bam and excute by using samtools and bcftools
-#sample_label: for the list of sample: basename, cut -f2 -d'. mean cut the second fragment after . of the sample name and run the second sample
-#exemple for sample.9_A02.final.bam cut 9_A02 and run with the second sample 10_B02
 mkdir -p $workdir
 cd $workdir
-
+##Qualimap require to add 2 columns in bed file
 #awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,0,"."}' $agilent > $agilent_corrected
 
 qualimap bamqc -bam $sample -c \
