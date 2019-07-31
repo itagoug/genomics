@@ -11,3 +11,8 @@ Genome analysis software will:
 ## Testing
 
 Runnings tests were performed on PBS and Slurm.
+
+#strelka2:
+Strelka2 is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs.
+# https://github.com/Illumina/strelka
+#Varscan2
