@@ -7,7 +7,8 @@
 #PBS -m abe
 #PBS -M inestagoug@gmail.com
 
-#This batch to run quality control of FASQT files
+#This batch to run quality control of FASQT files##
+
 set -eux
 
 module load java/7

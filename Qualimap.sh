@@ -35,7 +35,6 @@ agilent_corrected=$scratch/human/agilent_original/padded.clean_qualimap.bed
 snpeff_config=$home/scripts/snpEff.config
 
 ## parameters
-pipeline=bcftools
 gMUM=30g
 threads=25
 snpeff_genome=GRCh37.75
@@ -43,7 +42,8 @@ snpeff_genome=GRCh37.75
 
 mkdir -p $workdir
 cd $workdir
-##Qualimap require to add 2 columns in bed file
+
+##Qualimap require to add 2 columns in bed file##
 #awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,0,"."}' $agilent > $agilent_corrected
 
 qualimap bamqc -bam $sample -c \

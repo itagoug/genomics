@@ -74,6 +74,8 @@ ${strelka} \
 $workdir/config/runWorkflow.py \
 	-m local
 
+# annotate
+
 cd $workdir/config/results/variants/
 somatic=$workdir/config/results/variants/somatic.snvs.vcf
 output=$workdir/config/results/variants/somatic.snvs.annotated

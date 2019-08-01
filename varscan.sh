@@ -6,7 +6,7 @@
 #SBATCH -J test
 #SBATCH -p himem
 
-
+#Pipline to run in SLURM cluster
 
 
 set -eux
@@ -18,10 +18,9 @@ module load tabix/0.2.6
 ## H4H directories
 scratch=/cluster/projects/tiedemannlab/itagoug
 raw=$scratch/sickkids1/bam_clean/dup_clean
-#label=$raw/9_A02
-
 
 ## __DO NOT CHANGE__
+##if we run in PBS cluster:
 #pbs=$(echo $PBS_JOBID | cut -f1 -d '.')
 
 pbs=$SLURM_JOB_ID
@@ -78,6 +77,8 @@ module load varscan/2.4.2
 			--output-vcf 1 \
 					> ${output[1]}.comparison.vcf
 
+## annonatation
+
 output[2]=output.2.$pipeline.snpeff_annot.$snpeff_genome.clinvar.dbsnp.ind_$_individual.$pbs
 java -jar $snpeff_dir/SnpSift.jar annotate \
 -noLog -noDownload \
@@ -95,10 +96,9 @@ ${output[1]}.comparison.vcf \
 		 $snpeff_genome \
 		 > ${output[2]}.comparison.vcf
 
+## data meaning
 
 grep -v "^#" ${output[2]}.comparison.vcf | grep -v "rs" | grep -iv "^[a-z]"|  awk 'match($3, /\./) {print $0}' | sed -e 's/WT.*ANN=.|//g' -e 's/|ENS.*ADR\t/\t/g' | cut -f 1-2,4-5,8-10 | sed -e 's/;/\t/g' -e 's/|/\t/g' -e's/:/\t/g' -e 's/\tADP=/\t/g' -e 's/%//g' | cut -f 1-8,12-16,26-30 | awk 'NF>17' | grep -v "=" | egrep -iv "^\.|muc|usp|rp11" > ${output[2]}.var.txt
-
-
 
 
 _summary=$home/variants
@@ -107,6 +107,8 @@ cd $workdir
 cp *.var.txt $_summary/varscan
 cp *.stats.txt $_summary/stats_sickkids
 cp *.genes.txt $_summary/genes_sickkids
+
+#gzip vcf file
 
 for i in 1 2;
 do

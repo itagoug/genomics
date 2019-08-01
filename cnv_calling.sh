@@ -7,12 +7,14 @@
 #PBS -m abe
 #PBS -M inestagoug@gmail.com
 
+##Task CNV calling using CNVkit
 
 set -eux
 
 module load java/8 bwa/0.7.15 samtools/1.9
 module load snpEff/4.3
 module load python3/3.4.3
+module load R/3.5.0
 module load CNVkit/0.9.3
 
 ## H4H directories
@@ -41,7 +43,7 @@ cd $workdir
 		  --fasta $human_ref_genome \
 		  --short-names \
 		  --output-reference $workdir/my_reference.cnn \
-		  --diagram $workdir/output.2.cnv.txt
+		  -d $workdir/output.2.cnv.txt
 
 
 echo -e "\n\nAnalyses are done, without complaints."

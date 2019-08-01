@@ -7,7 +7,7 @@
 #PBS -m abe
 #PBS -M inestagoug@gmail.com
 
-
+## Task: sampling fastq to run it during debbuging 
 set -eux
 
 module load seqtk

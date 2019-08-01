@@ -7,6 +7,7 @@
 #PBS -m abe
 #PBS -M inestagoug@gmail.com
 
+###Task: pipline to align reads, remove duplicate for sureselect, convert sam to bam and index bam.
 
 set -eux
 
@@ -22,7 +23,6 @@ i2file=$scratch/sickkids1/DATA/custom
 label=$raw/217_P7
 
 ## PARAMETERS
-pipeline=bcftools
 gMUM=30g
 threads=25
 snpeff_genome=GRCh37.75
@@ -37,7 +37,6 @@ user_databases=$scratch/databases
 workdir=$scratch/sickkids1/analysis/$pbs
 _lb=$(basename $label)
 _output=$workdir/$_lb
-
 #human_ref_genome=$scratch/human/hg19/GCF_000001405.25_GRCh37.p13_genomic.fna change it to GRCh37-lite
 #GRCh37-lite.fa link http://www.bcgsc.ca/downloads/genomes/9606/hg19/1000genomes/bwa_ind/genome/
 human_ref_genome=$scratch/human/lite/GRCh37-lite.fa
@@ -48,13 +47,13 @@ LocatIt=$scratch/debugging/AGeNT
 
 
 
-## open bam archive
-#for the gz file do this
-#for var in R1 R3; do
+## open bam archive:
+#loup to gzip fastq.gz file
+for var in R1 R3; do
 
-#gzip -d ${label}_$var.fastq.gz
+gzip -d ${label}_$var.fastq.gz
 
-#done
+done
 
 
 ## RUN analysis
@@ -77,19 +76,6 @@ if [ ! -e $human_ref_genome.fai ]; then
 		samtools faidx ${human_ref_genome}
 
 fi
-
-
-##runing multiple samples
-
-
-for i in $(_lb *.fast.gz | rev | cut -c 13- | rev | uniq)
-do
-tophat -o /path/to/_output/${i}
-done
-
-
-
-
 
 ## align reads
 #samtools workflow
